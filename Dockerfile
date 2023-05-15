@@ -1,5 +1,6 @@
 # see task: PipAuthenticate@1 in azure-pipelines.yml
 # ARG PIP_EXTRA_URL
+# COPY is Same as 'ADD', but without the tar and remote URL handling.
 # RUN pip3 install -r /requirements.txt --extra-index-url $PIP_EXTRA_URL
 
 # ARG is only available during the build of a Docker image (RUN etc)

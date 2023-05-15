@@ -1,12 +1,4 @@
-# Visualize infrastructure architect 
-
-Diagrams lets you draw the cloud system architecture in Python code.
-
-```
-$ pip install diagrams or you can use requirements.txt
-```
-
-# Python Docker App deployed by Azure Devops pipeline to EDC development instance
+# Python Docker App deployed by Github Actions to AWS
 
 ## Initiate a docker based python APP development environment
 
@@ -15,34 +7,30 @@ clone repository && cd into it
 create .gitignore
 create .dockerignore
 python -m venv .venv
-.\.venv\Scripts\activate
+WIN .\.venv\Scripts\activate
+LNX source venv/bin/activate
 # pip install . 
-# pip install pandas 
 # pip install argparse
-# pip install fuzzywuzzy
 # pip install python-dotenv 
+# pip install diagrams or you can use requirements.txt
 pip install -r requirements.txt 
 # pip freeze -l > requirements.txt 
 .env
-    encodeUser.py Administrator user
     for Powershell:
-        $env:INFA_EDC_AUTH="Basic QWRtaW5pc3RyYXRvcjpBZG1pbmlzdHJhdG9y"
+        $env:VARIABLE="PARAMETER"
 
     for windows cmd:
-        set INFA_EDC_AUTH=Basic QWRtaW5pc3RyYXRvcjpBZG1pbmlzdHJhdG9y
+        set VARIABLE=PARAMETER
 
     or add to launch.json for vsvode debugging - in the configurations section
         "envFile": "${workspaceFolder}/.env",
         and add
-        INFA_EDC_AUTH="Basic QWRtaW5pc3RyYXRvcjpBZG1pbmlzdHJhdG9y",
+        VARIABLE="PARAMETER",
         to .env in the root folder of your project
 
     or add to launch.json for vscode debugging - in the configurations section
-        "env" : {"INFA_EDC_AUTH" : "Basic QWRtaW5pc3RyYXRvcjpBZG1pbmlzdHJhdG9y"},
+        "env" : {"VARIABLE" : "PARAMETER"},
 
-python .\edc_lineage\lineage_mapping__evaweprddls_ingress_all__synapse_evaprdsynspallservice.py -sn SHEET1 -o .\temp -u Native\Administrator -c https://edc-dev.zeiss.org:9086
-
-python ./edc_lineage/lineage_mapping__evaweprddls_ingress_all__synapse_evaprdsynspallservice.py -sn Sheet1 -o .\temp -c https://edc-dev.zeiss.org:9086
 # python change_me.py --debug run
 
 ```
@@ -55,21 +43,63 @@ python ./edc_lineage/lineage_mapping__evaweprddls_ingress_all__synapse_evaprdsyn
 ## Build our Docker Container and Run
 
 ```
-sudo docker build --no-cache -t devops_lineage:v1.0 .
-docker run --name devops_lineage -it -d devops_lineage:v1.0
-docker exec -it devops_lineage /bin/bash
-docker container inspect devops_lineage
-tail -f cron_log.log
+sudo docker build --no-cache -t change_me:v1.0 .
+docker run --name change_me -it -d change_me:v1.0
+docker exec -it change_me /bin/bash
+docker container inspect change_me
 ```
 
-## Publishing the Docker image
+## Core components
+
+### AWS
+
+The AWS infrastructure is setup using terraform in the [`./terraform`](./terraform).
+
+The following components are deployed:
+
+- Application Load Balancer ([`./lb.tf`](./terraform/lb.tf))
+- ECS Cluster / ECS Service ([`./ecs.tf`](./terraform/ecs.tf))
+- Elastic Container Registry ([`./ecr.tf`](./terraform/ecr.tf))
+- IAM permissions ([`./iam.tf`](./terraform/iam.tf))
+- VPC configuration ([`./vpc.tf`](./terraform/vpc.tf))
+
+### CI/CD
+
+The repository leverages the [AWS Github Actions](https://github.com/aws-actions/)
+maintained by AWS.
+
+The main goal is to provide an example configuration of the following workflow:
+
+- Run the integration tests
+- Build the Docker image
+- Publish it to a private ECR
+- Update the corresponding ECS Service (by editing the task image)
+
+## Runbook
+- Set up the AWS credentials: Create an IAM user in your AWS account with the necessary permissions to manage ECS resources. Obtain the access key and secret key for this IAM user.
+
+- Configure Terraform: Install Terraform on your local machine and set up the necessary configuration files. Create a new Terraform module or use an existing one for ECS deployment.
+
+- Write Terraform scripts: In your Terraform module, define the resources required for ECS deployment. This includes ECS clusters, task definitions, services, load balancers, etc. Make sure to specify the container image, ports, environment variables, and any other relevant configuration.
+
+- Create infrastructure as code: Create Terraform configuration files (.tf) to define your desired infrastructure state. Declare variables for configurable values like AWS region, container image, and environment variables. Define the ECS resources using Terraform resource blocks.
+
+- Set up GitHub Actions: Create a GitHub repository for your project and navigate to the "Actions" tab. Create a new workflow file (e.g., .github/workflows/ecs-deploy.yml) to define the deployment process.
+
+- Configure GitHub Actions workflow: In the workflow file, define the necessary steps to deploy the container. This typically involves checking out the repository, configuring AWS credentials, running terraform init and terraform apply commands, and handling any required input variables.
+
+- Store secrets: Store sensitive information like AWS access key and secret key as GitHub repository secrets. You can access these secrets in your workflow file as environment variables to authenticate with AWS.
+
+- Commit and push changes: Commit your Terraform scripts, GitHub Actions workflow file, and any other necessary changes to your repository. Push them to the remote repository, triggering the GitHub Actions workflow.
+
+- Monitor deployment: Monitor the GitHub Actions workflow execution for any errors or issues. You can view the deployment progress, logs, and any failure messages in the GitHub Actions console.
 
 ## Bonus — Makefile
 
 Let’s create a simple Makefile that allows us to build, run, and kill our image/container:
 
 ```
-app_name = gunicorn_flask
+app_name = change_me
 build:
     @docker build -t $(app_name) .
 run:
@@ -106,5 +136,3 @@ def test_failing():
 ```
 
 pytest
-
-## Access Flask app at https://edc.zeiss.org:8000
