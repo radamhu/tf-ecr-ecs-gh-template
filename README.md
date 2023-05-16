@@ -1,4 +1,41 @@
-# Python Docker App deployed by Github Actions to AWS
+# Docker-based python App deployed by Github Actions to AWS
+
+# Project details
+
+## Deploy a container to ECS
+
+### Requirements
+
+* The required infrastructure is written in either CloudFormation or Terraform
+
+* The deployment is automated using GitHub actions
+
+
+
+## Bonus Points
+
+
+* The docker container is custom with the source code of the app and the Dockerfile in the repo
+
+## What we'll be looking for in your app
+
+
+* General architecture
+
+* Security Considerations
+
+* The Pipeline
+
+* Repository Setup
+
+
+
+Notes
+
+
+* You don't need to actually deploy it, but it should be deployable.
+
+* Please don't spend more than two hours on this task
 
 ## Initiate a docker based python APP development environment
 
@@ -15,6 +52,7 @@ LNX source venv/bin/activate
 # pip install diagrams or you can use requirements.txt
 pip install -r requirements.txt 
 # pip freeze -l > requirements.txt 
+.envrc # direnv variables
 .env
     for Powershell:
         $env:VARIABLE="PARAMETER"
