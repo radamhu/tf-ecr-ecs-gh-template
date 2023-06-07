@@ -2,39 +2,29 @@
 
 # Project details
 
+- note : [Coderbyte | The #1 Coding Assessment Platform]([Coderbyte | The #1 Coding Assessment Platform](https://education-first.coderbyte.com/question/question-custom-takehome-project-u2vtjjxnzh#comment_usergifmur4vq))
+
 ## Deploy a container to ECS
 
 ### Requirements
 
 * The required infrastructure is written in either CloudFormation or Terraform
-
 * The deployment is automated using GitHub actions
 
-
-
 ## Bonus Points
-
 
 * The docker container is custom with the source code of the app and the Dockerfile in the repo
 
 ## What we'll be looking for in your app
 
-
 * General architecture
-
 * Security Considerations
-
 * The Pipeline
-
 * Repository Setup
-
-
 
 Notes
 
-
 * You don't need to actually deploy it, but it should be deployable.
-
 * Please don't spend more than two hours on this task
 
 ## Initiate a docker based python APP development environment
@@ -52,7 +42,8 @@ LNX source venv/bin/activate
 # pip install diagrams or you can use requirements.txt
 pip install -r requirements.txt 
 # pip freeze -l > requirements.txt 
-.envrc # direnv variables
+.envrc # eval "$(direnv hook zsh)"
+.psenvrc
 .env
     for Powershell:
         $env:VARIABLE="PARAMETER"
@@ -114,22 +105,15 @@ The main goal is to provide an example configuration of the following workflow:
 - Update the corresponding ECS Service (by editing the task image)
 
 ## Runbook
+
 - Set up the AWS credentials: Create an IAM user in your AWS account with the necessary permissions to manage ECS resources. Obtain the access key and secret key for this IAM user.
-
 - Configure Terraform: Install Terraform on your local machine and set up the necessary configuration files. Create a new Terraform module or use an existing one for ECS deployment.
-
 - Write Terraform scripts: In your Terraform module, define the resources required for ECS deployment. This includes ECS clusters, task definitions, services, load balancers, etc. Make sure to specify the container image, ports, environment variables, and any other relevant configuration.
-
 - Create infrastructure as code: Create Terraform configuration files (.tf) to define your desired infrastructure state. Declare variables for configurable values like AWS region, container image, and environment variables. Define the ECS resources using Terraform resource blocks.
-
 - Set up GitHub Actions: Create a GitHub repository for your project and navigate to the "Actions" tab. Create a new workflow file (e.g., .github/workflows/ecs-deploy.yml) to define the deployment process.
-
 - Configure GitHub Actions workflow: In the workflow file, define the necessary steps to deploy the container. This typically involves checking out the repository, configuring AWS credentials, running terraform init and terraform apply commands, and handling any required input variables.
-
 - Store secrets: Store sensitive information like AWS access key and secret key as GitHub repository secrets. You can access these secrets in your workflow file as environment variables to authenticate with AWS.
-
 - Commit and push changes: Commit your Terraform scripts, GitHub Actions workflow file, and any other necessary changes to your repository. Push them to the remote repository, triggering the GitHub Actions workflow.
-
 - Monitor deployment: Monitor the GitHub Actions workflow execution for any errors or issues. You can view the deployment progress, logs, and any failure messages in the GitHub Actions console.
 
 ## Bonus — Makefile
